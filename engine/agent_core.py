@@ -6,19 +6,22 @@ class AtomicAgent:
         self.api_key = api_key
         self.name = name
         self.role = role
-        # تصحيح اسم الموديل ليتوافق مع API
-        self.model_name = "gemini-1.5-flash" if "flash" in model_name else "gemini-pro"
+        # تنظيف اسم الموديل للتأكد من توافقه
+        self.model_name = model_name.strip()
+        # إذا كان الاسم لا يبدأ بكلمة models/، نضيفها (بعض النسخ تتطلبها)
+        # لكن في النسخة الحالية requests تعمل غالباً بدون البادئة إذا كانت صحيحة
+        # سنعتمد الاسم كما يأتي من القائمة المختارة
         self.tool_ids = tool_ids
 
     def run(self, input_data):
         if not self.api_key:
             return "Error: API Key is missing."
 
+        # بناء الرابط باستخدام الموديل المختار
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model_name}:generateContent?key={self.api_key}"
         
         headers = {'Content-Type': 'application/json'}
         
-        # صياغة الطلب
         payload = {
             "contents": [{
                 "parts": [{
@@ -35,10 +38,11 @@ class AtomicAgent:
                 try:
                     return result['candidates'][0]['content']['parts'][0]['text']
                 except (KeyError, IndexError):
-                    return "Error: Unexpected response format from Gemini."
+                    return f"Error: Unexpected response format. {result}"
             else:
                 return f"API Error {response.status_code}: {response.text}"
                 
         except Exception as e:
             return f"Connection Error: {str(e)}"
+
 
