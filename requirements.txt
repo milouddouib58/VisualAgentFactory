@@ -1,7 +1,5 @@
 streamlit
-graphviz
-pandas
-pydantic
 google-generative-ai
-
+pandas
+graphviz
 
