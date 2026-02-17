@@ -1,5 +1,0 @@
-streamlit
-google-generative-ai
-graphviz
-pandas
-pydantic
