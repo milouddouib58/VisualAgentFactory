@@ -2,3 +2,6 @@ streamlit
 graphviz
 pandas
 pydantic
+google-generative-ai
+
+
